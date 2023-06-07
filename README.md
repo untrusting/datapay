@@ -53,7 +53,7 @@ const datapay = require('datapay')
 ## 2. In browser
 
 ```
-<script src='https://unpkg.com/datapay@0.0.15/dist/datapay.min.js'></script>
+<script src='https://raw.githubusercontent.com/untrusting/datapay/master/dist/datapay.min.js'></script>
 ```
 
 ---

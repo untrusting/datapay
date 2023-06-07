@@ -18,7 +18,7 @@ Post to the blockchain with just 4 lines of code.
 
 ## 1. Datapay Transaction Composer
 
-- [Datapay transaction composer](https://unwriter.github.io/datapay/example/composer)
+- [Datapay transaction composer](https://untrusting.github.io/datapay/example/composer)
 
 - [View source](example/composer.html)
 
@@ -26,7 +26,7 @@ Post to the blockchain with just 4 lines of code.
 
 Post to both Memo.cash and Blockpress with a single interface.
 
-- [DEMO](https://unwriter.github.io/datapay/example/playground)
+- [DEMO](https://untrusting.github.io/datapay/example/playground)
 
 - [View source](example/playground.html)
 
@@ -40,7 +40,7 @@ Post to both Memo.cash and Blockpress with a single interface.
 Install both `datapay` and `bsv` (Datapay has a peer dependency on bsv)
 
 ```
-npm install --save datapay
+npm install --save git+https://github.com/untrusting/datapay
 npm install --save bsv
 ```
 
@@ -66,13 +66,13 @@ Send `"Hello from datapay"` to [memo.cash](https://memo.cash) in 5 lines of code
 ```
 const privateKey = [YOUR PRIVATE KEY HERE];
 datapay.send({
-  safe: true,
-  data: ["0x6d02", "Hello from datapay"],
-  pay: { key: privateKey }
+	safe: true,
+	data: ["0x6d02", "Hello from datapay"],
+	pay: { key: privateKey }
 });
 ```
 
-Above code builds an `OP_RETURN` transaction with `0x6d02 hello` as push data, and broadcasts it to Bitcoin SV network.
+Above code builds an `OP_RETURN` transaction with `0x6d02 Hello from datapay` as push data, and broadcasts it to Bitcoin SV network.
 
 ---
 
@@ -82,27 +82,26 @@ Datapay lets you build a transaction in a declarative manner. Here's an example:
 
 ```
 var config = {
-  safe: true,
-  data: ["0x6d02", "hello from datapay"],
-  pay: {
-    key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
-    rpc: "https://api.mattercloud.net",
-    fee: 400,
-    to: [{
-      address: "1A2JN4JAUoKCQ5kA4pHhu4qCqma8jZSU81",
-      value: 1000
-    }]
-  }
+	safe: true,
+	data: ["0x6d02", "hello from datapay"],
+	pay: {
+    	key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
+    	fee: 50,
+    	to: [{
+      		address: "1A2JN4JAUoKCQ5kA4pHhu4qCqma8jZSU81",
+      		value: 1000
+    	}]
+  	}
 }
 ```
 
 Above config describes a transaction that:
 
 - Posts `"hello from datapay"` to [memo.cash](https://memo.cash) network (See the protocol at [https://memo.cash/protocol](https://memo.cash/protocol)),
-- paying the fee of `400` satoshis,
-- signed with a private key: `5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw`,
-- through a public JSON-RPC endpoint at [https://api.mattercloud.net](https://api.mattercloud.net)
-- while tipping the user `1A2JN4JAUoKCQ5kA4pHhu4qCqma8jZSU81` a value of `1000` satoshis.
+- Paying the fee of `50` satoshis per kilobyte,
+- Signed with a private key: `5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw`,
+- Through a public JSON-RPC endpoint at https://api.bitails.io
+- While tipping the user `1A2JN4JAUoKCQ5kA4pHhu4qCqma8jZSU81` a value of `1000` satoshis.
 
 All you need to do to invoke it is call:
 
@@ -113,8 +112,8 @@ datapay.send(config)
 Want to instead build a transaction but save it for later or export it? Just call:
 
 ```
-datapay.build(config, function(error, tx) {
-  console.log("Here's the transaction! : ", tx)
+datapay.build(config, (error, tx) => {
+	console.log("Here's the transaction! : ", tx)
 })
 ```
 
@@ -158,7 +157,7 @@ The `build()` method takes two arguments:
 
 The first argument--a declarative JSON object--can contain the following attributes:
 
-- `safe`: Please set to `true`. This will create a "safe" `OP_FALSE OP_RETURN` transaction instead of raw `OP_RETURN`. ([Learn more](https://bitcoinsv.io/2019/07/27/the-return-of-op_return-roadmap-to-genesis-part-4/))
+- `safe`: Please set to `true`. This will create a "safe" `OP_FALSE OP_RETURN` transaction instead of raw `OP_RETURN`. ([Learn more](https://www.bitcoinsv.com/articles/the-return-of-op_return-roadmap-to-genesis-part-4))
 - `data`: For constructing `OP_RETURN` data
 - `pay`: For describing everything related to actually sending money
 - `tx`: For importing previously "built" transactions
@@ -174,17 +173,17 @@ The `data` attribute is used to construct human readable/processable data to pos
 
 ```
 const tx = {
-  safe: true,
-  data: ["0x6d02", "hello world"]
+	safe: true,
+	data: ["0x6d02", "hello world"]
 }
-datapay.build(tx, function(err, tx) {  
-  /**
-  * res contains the generated transaction object, powered by bsv
-  * You can check it out at https://github.com/moneybutton/bsv/blob/master/lib/transaction/transaction.js
-  * Some available methods you can call on the tx object are:
-  * 1. tx.toString() => Export as string
-  * 2. tx.toObject() => Inspect the transaction as JSON object
-  **/
+datapay.build(tx, (err, tx) => {  
+	/**
+	* res contains the generated transaction object, powered by bsv
+	* You can check it out at https://github.com/moneybutton/bsv/blob/master/lib/transaction/transaction.js
+	* Some available methods you can call on the tx object are:
+	* 1. tx.toString() => Export as string
+	* 2. tx.toObject() => Inspect the transaction as JSON object
+	**/
 });
 ```
 
@@ -209,39 +208,39 @@ In Node.js (Buffer)
 
 ```
 const tx = {
-  safe: true,
-  data: ["0x6d02", Buffer.from("Abc"), "hello world"]
+	safe: true,
+	data: ["0x6d02", Buffer.from("Abc"), "hello world"]
 }
-datapay.build(tx, function(err, tx) {  
-  /**
-  * res contains the generated transaction object, powered by bsv
-  * You can check it out at https://github.com/moneybutton/bsv/blob/master/lib/transaction/transaction.js
-  * Some available methods you can call on the tx object are:
-  * 1. tx.toString() => Export as string
-  * 2. tx.toObject() => Inspect the transaction as JSON object
-  **/
+datapay.build(tx, (err, tx) => {  
+	/**
+	* res contains the generated transaction object, powered by bsv
+	* You can check it out at https://github.com/moneybutton/bsv/blob/master/lib/transaction/transaction.js
+	* Some available methods you can call on the tx object are:
+	* 1. tx.toString() => Export as string
+	* 2. tx.toObject() => Inspect the transaction as JSON object
+	**/
 });
 ```
 
 In Browser, building OP_RETURN from `input[type=file]` (ArrayBuffer)
 
 ```
-document.querySelector("input[type=file]").onchange = function(e) {
-  // get file type
-  var filetype = e.target.files[0].type
-  var reader = new FileReader();
-  // Listen to file load event (Will call the actual load below)
-  reader.addEventListener('load', function(event) {
-    // ArrayBuffer
-    var ab = event.target.result
-    datapay.build({
-      data: [ "19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut", ab, filetype ]
-    }, function(err, res) {
-      console.log("built transaction = ", res)
-    })
-  })
-  // Read file content as "ArrayBuffer"
-  reader.readAsArrayBuffer(e.target.files[0]);
+document.querySelector("input[type=file]").onchange = (e) => {
+// get file type
+	let filetype = e.target.files[0].type
+	let reader = new FileReader();
+	// Listen to file load event (Will call the actual load below)
+	reader.addEventListener('load', (event) => {
+		// ArrayBuffer
+		let ab = event.target.result
+		datapay.build({
+			data: ["19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut", ab, filetype]
+		}, (err, res) => {
+			console.log("built transaction = ", res)
+		})
+	})
+	// Read file content as "ArrayBuffer"
+	reader.readAsArrayBuffer(e.target.files[0]);
 }
 ```
 
@@ -251,16 +250,16 @@ This is useful if you want to export a transaction and later recover it.
 
 ```
 const tx = {
-  data: "6a04366430320b68656c6c6f20776f726c64"
+	data: "6a04366430320b68656c6c6f20776f726c64"
 }
-datapay.build(tx, function(err, tx) {
-  /**
-  * res contains the generated transaction object, powered by bsv
-  * You can check it out at https://github.com/moneybutton/bsv/blob/master/lib/transaction/transaction.js
-  * Some available methods you can call on the tx object are:
-  * 1. tx.toString() => Export as string
-  * 2. tx.toObject() => Inspect the transaction as JSON object
-  **/
+datapay.build(tx, (err, tx) => {
+	/**
+	* res contains the generated transaction object, powered by bsv
+	* You can check it out at https://github.com/moneybutton/bsv/blob/master/lib/transaction/transaction.js
+	* Some available methods you can call on the tx object are:
+	* 1. tx.toString() => Export as string
+	* 2. tx.toObject() => Inspect the transaction as JSON object
+	**/
 });
 ```
 
@@ -271,9 +270,7 @@ datapay.build(tx, function(err, tx) {
 The `pay` attribute deals with everything related to actually sending money.
 
 - `key`: Signing with private key
-- `rpc`: Specifying a JSON-RPC endpoint to broadcast through
-- `fee`: Specifying transaction fee
-- `feeb`: Specifying transaction fee per byte
+- `fee`: Specifying transaction fee per kilobyte
 - `to`: Attaching tips on top of OP_RETURN messages (Normally OP_RETURN transactions don't have a receiver)
 
 When a `pay` attribute is present, the `build()` call generates a `transaction` instead of a `script`.
@@ -284,87 +281,62 @@ The `key` attribute is mandatory. You must specify a private key in order to sig
 
 ```
 const tx = {
-  safe: true,
-  data: ["0x6d02", "hello world"],
-  pay: { key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw" }
+	safe: true,
+	data: ["0x6d02", "hello world"],
+	pay: { key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw" }
 }
-datapay.build(tx, function(err, tx) {
-  /**
-  * res contains the generated transaction object
-  * (a signed transaction, since 'key' is included)
-  **/
+datapay.build(tx, (err, tx) => {
+	/**
+	* res contains the generated transaction object
+	* (a signed transaction, since 'key' is included)
+	**/
 })
 ```
 
 
-#### 2. `rpc`
+#### 2. `testnet`
 
-The `rpc` attribute is used to manually set the JSON-RPC endpoint you wish to broadcast through. 
+The `testnet` attribute is used to manually set the JSON-RPC endpoint for Bitails to testnet.
 
-- default: `https://api.mattercloud.net`
+- default: false
 
 ```
 const tx = {
-  safe: true,
-  data: ["0x6d02", "hello world"],
-  pay: {
-    key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
-    rpc: "https://api.mattercloud.net"
-  }
+	safe: true,
+	data: ["0x6d02", "hello world"],
+	testnet: true,
+	pay: {
+		key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
+	}
 };
-datapay.build(tx, function(err, res) {
-  /**
-  * res contains the generated transaction object
-  * (a signed transaction, since 'key' is included)
-  **/
+datapay.build(tx, (err, res) => {
+	/**
+	* res contains the generated transaction object
+	* (a signed transaction, since 'key' is included)
+	**/
 })
 ```
 
-#### 3a. `fee`
+#### 3. `fee`
 
-The `fee` attribute is used to specify the transaction fee in **satoshis**.
+The `fee` attribute is used to specify the transaction fee in **satoshis** per kilobyte.
 
-- default: `400`
-
-```
-const tx = {
-  safe: true,
-  data: ["0x6d02", "hello world"],
-  pay: {
-    key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
-    rpc: "https://api.mattercloud.net",
-    fee: 400
-  }
-}
-datapay.build(tx, function(err, res) {
-  /**
-  * res contains the generated transaction object
-  * (a signed transaction, since 'key' is included)
-  **/
-})
-```
-
-#### 3b. `feeb`
-
-The `feeb` attribute is used to specify the transaction fee per byte in **satoshis**.
-
-- default: `1.4`
+- default: `50`
 
 ```
 const tx = {
-  safe: true,
-  data: ["0x6d02", "hello world"],
-  pay: {
-    key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
-    rpc: "https://api.mattercloud.net",
-    feeb: 1.04
-  }
+	safe: true,
+	data: ["0x6d02", "hello world"],
+	pay: {
+		key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
+		fee: 50
+	}
 }
-datapay.build(tx, function(err, res) {
-  /**
-  * res contains the generated transaction object
-  * (a signed transaction, since 'key' is included)
-  **/
+datapay.build(tx, (err, res) => {
+	/**
+	* res contains the generated transaction object
+	* (a signed transaction, since 'key' is included)
+	**/
 })
 ```
 
@@ -379,26 +351,26 @@ The `to` attribute is an array of receivers to send the OP_RETURN to. Normally t
 
 ```
 const tx = {
-  safe: true,
-  data: ["0x6d02", "hello world"],
-  pay: {
-    key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
-    to: [{
-      address: "1A2JN4JAUoKCQ5kA4pHhu4qCqma8jZSU81",
-      value: 500
-    }, {
-      address: "1A2JN4JAUoKCQ5kA4pHhu4qCqma8jZSU81",
-      value: 500
-    }]
-  }
+	safe: true,
+	data: ["0x6d02", "hello world"],
+	pay: {
+		key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
+		to: [{
+				address: "1A2JN4JAUoKCQ5kA4pHhu4qCqma8jZSU81",
+				value: 500
+			}, {
+				address: "1A2JN4JAUoKCQ5kA4pHhu4qCqma8jZSU81",
+				value: 500
+			}]
+	}
 };
-datapay.build(tx, function(err, res) {
-  /**
-  * res contains the generated transaction object
-  * (a signed transaction, since 'key' is included.
-  * Also, the transaction includes actual coin transfer outputs,
-  * since the "to" attribute is included)
-  **/
+datapay.build(tx, (err, res) => {
+	/**
+	* res contains the generated transaction object
+	* (a signed transaction, since 'key' is included.
+	* Also, the transaction includes actual coin transfer outputs,
+	* since the "to" attribute is included)
+	**/
 })
 ```
 
@@ -413,26 +385,28 @@ For this feature, datapay uses [Bitquery](https://docs.bitdb.network/docs/query_
 
 ```
 const tx = {
-  safe: true,
-  data: ["0x6d02", "hello world"],
-  pay: {
-    key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
-    filter: {
-      v: 3,
-      q: {
-        find: {
-          "out.b0": { "op": 106 },
-          "out.s1": "SLP"
-        }
-      }
-    }
-  }
+	safe: true,
+	data: ["0x6d02", "hello world"],
+	pay: {
+		key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
+		filter: {
+			v: 3,
+			q: {
+				find: {
+					"out.b0": {
+						"op": 106
+					},
+					"out.s1": "SLP"
+				}
+			}
+		}
+	}
 }
-datapay.build(tx, function(err, tx) {
-  /**
-  * res contains the generated transaction object
-  * (a signed transaction, since 'key' is included)
-  **/
+datapay.build(tx, (err, tx) => {
+	/**
+	 * res contains the generated transaction object
+	 * (a signed transaction, since 'key' is included)
+	 **/
 })
 ```
 
@@ -446,9 +420,9 @@ You may want to import a previously exported transaction. This is when you use t
 
 ```
 datapay.build({
-  tx: "01000000014182e9844c2979d973d3e82c55d57e1a971ed2e5473557ce0414864612911aa5010000006b48304502210098f8f32cd532bc73eef1e01c3d359caf0a7aa8f3dc1eebb8011d80810c9dbe66022054c6b23d5bd9573a1e6135c39dcc31a65cab91f3b3db781995e824614e24bad9412102d024c1861ccc655ce3395bc4d8a0bdcfb929ffcd9d1a8c81d8c6fa1dfb9bd70cffffffff020000000000000000106a026d020b68656c6c6f20776f726c64c2ff0000000000001976a9142a3a6886d98776d0197611e5328ba8806c3739db88ac00000000"
-}, function(err, tx) {
-  // 'tx' is a transaction object
+	tx: "01000000014182e9844c2979d973d3e82c55d57e1a971ed2e5473557ce0414864612911aa5010000006b48304502210098f8f32cd532bc73eef1e01c3d359caf0a7aa8f3dc1eebb8011d80810c9dbe66022054c6b23d5bd9573a1e6135c39dcc31a65cab91f3b3db781995e824614e24bad9412102d024c1861ccc655ce3395bc4d8a0bdcfb929ffcd9d1a8c81d8c6fa1dfb9bd70cffffffff020000000000000000106a026d020b68656c6c6f20776f726c64c2ff0000000000001976a9142a3a6886d98776d0197611e5328ba8806c3739db88ac00000000"
+}, (err, tx) => {
+	// 'tx' is a transaction object
 })
 ```
 
@@ -459,12 +433,12 @@ You can export an unsigned transaction, and later import and sign it to create a
 ```
 // import an unsigned transaction and sign it
 datapay.build({
-  tx: "01000000014182e9844c2979d973d3e82c55d57e1a971ed2e5473557ce0414864612911aa5010000006b48304502210098f8f32cd532bc73eef1e01c3d359caf0a7aa8f3dc1eebb8011d80810c9dbe66022054c6b23d5bd9573a1e6135c39dcc31a65cab91f3b3db781995e824614e24bad9412102d024c1861ccc655ce3395bc4d8a0bdcfb929ffcd9d1a8c81d8c6fa1dfb9bd70cffffffff020000000000000000106a026d020b68656c6c6f20776f726c64c2ff0000000000001976a9142a3a6886d98776d0197611e5328ba8806c3739db88ac00000000",
-  pay: {
-    key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw"
-  }
-}, function(err, tx) {
-  // 'tx' is a signed transaction object
+	tx: "01000000014182e9844c2979d973d3e82c55d57e1a971ed2e5473557ce0414864612911aa5010000006b48304502210098f8f32cd532bc73eef1e01c3d359caf0a7aa8f3dc1eebb8011d80810c9dbe66022054c6b23d5bd9573a1e6135c39dcc31a65cab91f3b3db781995e824614e24bad9412102d024c1861ccc655ce3395bc4d8a0bdcfb929ffcd9d1a8c81d8c6fa1dfb9bd70cffffffff020000000000000000106a026d020b68656c6c6f20776f726c64c2ff0000000000001976a9142a3a6886d98776d0197611e5328ba8806c3739db88ac00000000",
+	pay: {
+		key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw"
+	}
+}, (err, tx) => {
+	// 'tx' is a signed transaction object
 })
 ```
 
@@ -477,9 +451,9 @@ If you already have a signed transaction object, you can simply send it away wit
 
 ```
 datapay.send({
-  tx: "01000000014182e9844c2979d973d3e82c55d57e1a971ed2e5473557ce0414864612911aa5010000006b48304502210098f8f32cd532bc73eef1e01c3d359caf0a7aa8f3dc1eebb8011d80810c9dbe66022054c6b23d5bd9573a1e6135c39dcc31a65cab91f3b3db781995e824614e24bad9412102d024c1861ccc655ce3395bc4d8a0bdcfb929ffcd9d1a8c81d8c6fa1dfb9bd70cffffffff020000000000000000106a026d020b68656c6c6f20776f726c64c2ff0000000000001976a9142a3a6886d98776d0197611e5328ba8806c3739db88ac00000000"
-}, function(err, hash) {
-  // 'hash' is the transaction hash
+	tx: "01000000014182e9844c2979d973d3e82c55d57e1a971ed2e5473557ce0414864612911aa5010000006b48304502210098f8f32cd532bc73eef1e01c3d359caf0a7aa8f3dc1eebb8011d80810c9dbe66022054c6b23d5bd9573a1e6135c39dcc31a65cab91f3b3db781995e824614e24bad9412102d024c1861ccc655ce3395bc4d8a0bdcfb929ffcd9d1a8c81d8c6fa1dfb9bd70cffffffff020000000000000000106a026d020b68656c6c6f20776f726c64c2ff0000000000001976a9142a3a6886d98776d0197611e5328ba8806c3739db88ac00000000"
+}, (err, hash) => {
+	// 'hash' is the transaction hash
 })
 ```
 
@@ -498,12 +472,12 @@ The only difference is the callback function.
 
 ```
 const tx = {
-  safe: true,
-  data: ["0x6d02", "hello world"])
-  pay: { key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw" }
+	safe: true,
+	data: ["0x6d02", "hello world"])
+	pay: { key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw" }
 }
-datapay.send(tx, function(err, res) {
-  console.log(res)
+datapay.send(tx, (err, res) => {
+	console.log(res)
 })
 ```
 
@@ -513,19 +487,19 @@ datapay.send(tx, function(err, res) {
 // Build and export an unsigned transaction for later usage
 var exportedTxHex = "";
 const tx = {
-  safe: true,
-  data: ["0x6d02", "hello world"]
+	safe: true,
+	data: ["0x6d02", "hello world"]
 }
-datapay.build(tx, function(err, res) {
-  exportedTxHex = res;
+datapay.build(tx, (err, res) => {
+	exportedTxHex = res;
 })
 
 // Later import exportedTxHex and sign it with privatkey, and broadcast, all in one method:
 datapay.send({
-  tx: exportedTx,
-  pay: { key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw" }
-}, function(err, hash) {
-  // hash contains the transaction hash after the broadcast
+	tx: exportedTx,
+	pay: { key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw" }
+}, (err, hash) => {
+	// hash contains the transaction hash after the broadcast
 })
 ```
 
@@ -538,19 +512,19 @@ This time since the exported transaction is already signed, no need for addition
 // Build and export an unsigned transaction for later usage
 var exportedSignedTxHex = "";
 const tx = {
-  safe: true,
-  data: ["0x6d02", "hello world"],
-  pay: { key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw" }
+	safe: true,
+	data: ["0x6d02", "hello world"],
+	pay: { key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw" }
 }
-datapay.build(tx, function(err, res) {
-  exportedSignedTxHex = res;
+datapay.build(tx, (err, res) => {
+	exportedSignedTxHex = res;
 })
 
 // Later import exportedTxHex and broadcast, all in one method:
 datapay.send({
-  tx: exportedSignedTx,
-}, function(err, hash) {
-  // hash contains the transaction hash after the broadcast
+	tx: exportedSignedTx,
+}, (err, hash) => {
+	// hash contains the transaction hash after the broadcast
 })
 ```
 
@@ -586,31 +560,33 @@ Using this endpoint you can connect to a public JSON-RPC endpoint to let you mak
 ### Syntax
 
 ```
-datapay.connect([RPC ENDPOINT]).[METHOD]
+datapay.connect([NETWORK]).[METHOD]
 ```
 
-If you leave the `RPC ENDPOINT` part out, it will automatically use the default https://api.mattercloud.net node
+If you leave the `NETWORK` part out, it will automatically use the default `main` node, you can alternatively use `testnet`
 
-### Example 1: Connecting to default node and calling `getUnspentUtxos()` method:
-
-```
-datapay.connect().getUnspentUtxos("14xMz8rKm4L83RuZdmsHXD2jvENZbv72vR", function(err, utxos) {
-  if (err) {
-    console.log("Error: ", err)
-  } else {
-    console.log(utxos) 
-  }
-})
-```
-
-### Example 2. Specifying a JSON-RPC endpoint
+### Example 1: Connecting to default node and calling `utxos()` method:
 
 ```
-datapay.connect('https://api.mattercloud.net').getUnspentUtxos("14xMz8rKm4L83RuZdmsHXD2jvENZbv72vR", function(err, utxos) {
-  if (err) {
-    console.log("Error: ", err)
-  } else {
-    console.log(utxos) 
-  }
+datapay.connect().utxos("14xMz8rKm4L83RuZdmsHXD2jvENZbv72vR").then((res) => {
+	if (!res.unspent || !res.unspent.length) {
+		console.log("Empty wallet, no UTXOs");
+		return;
+	}
+
+	console.log(res.unspent);
+});
+```
+
+### Example 2. Specifying the testnet endpoint
+
+```
+datapay.connect('testnet').utxos("14xMz8rKm4L83RuZdmsHXD2jvENZbv72vR").then((res) => {
+	if (!res.unspent || !res.unspent.length) {
+		console.log("Empty wallet, no UTXOs");
+		return;
+	}
+
+	console.log(res.unspent);
 });
 ```

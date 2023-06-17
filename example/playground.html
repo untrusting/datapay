@@ -90,11 +90,10 @@
 
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<script src="../dist/datapay.min.js"></script>
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/untrusting/bitails/dist/bitails.min.js"></script>
 
 		<script>
-			let endpoint = "https://api.bitails.io/tx/broadcast";
-			let rawTxKey = 'raw';
-			let apiKey = '';
+			const explorer = new Explorer("main");
 
 			let transaction = null;
 			let selected = null;
@@ -145,26 +144,12 @@
 						} else {
 							e.target.textContent = "Sending...";
 							sending = true;
-							header = {
-								'Accept': 'application/json',
-								'Content-Type': 'application/json'
-							};
-
-							if (apiKey.length > 0) {
-								header.apikey = apiKey;
-							}
-
-							fetch(endpoint, {
-									headers: header,
-									method: 'POST',
-									body: `{"${rawTxKey}": "${transaction.toString()}"}`
-								}).then((res) => {
-									return res.json();
-								}).then((response) => {
-									console.log("Response = ", response);
-									e.target.textContent = "Sent!";
-									confirmEl.innerHTML = "<a href='https://whatsonchain.com/tx/" + response.txid + "' target='_blank'>Success! Click to view Transaction</a>";
-								});
+							
+							explorer.broadcast(transaction.toString()).then((res) => {
+								console.log(res);
+								e.target.textContent = "Sent!";
+								confirmEl.innerHTML = "<a href='https://whatsonchain.com/tx/" + res.txid + "' target='_blank'>Success! Click to view Transaction</a>";
+							});
 						}
 					}
 					return false;

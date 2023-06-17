@@ -16,7 +16,7 @@ const build = (options, callback) => {
 	let builder = new bitcoin.TxBuilder(tx);
 
 	// Set the fee per kilobyte for the transaction
-	builder.setFeePerKbNum(options.pay && options.pay.fee ? options.pay.fee : 50);
+	builder.setFeePerKbNum(options.pay && options.pay.fee ? options.pay.fee : 1);
 	builder.dust = 0;
 
 	// If a partially signed transaction is provided, import it and check if it can be modified
